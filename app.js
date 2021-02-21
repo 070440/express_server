@@ -2,7 +2,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var {checkAPP, checkUser} = require('./util/middleware')
+var {checkAPP, checkUser, checkAdmin} = require('./util/middleware')
 
 
 var indexRouter = require('./routes/index');
@@ -24,7 +24,7 @@ app.all('*', function(req, res, next){
     next();
 });
 
-app.use('/',  indexRouter);
-app.use('/users', usersRouter);
-app.use('/admin', checkUser, usersRouter);
+app.use('/', checkAPP, indexRouter);
+app.use('/users',checkAPP, usersRouter);
+app.use('/admin', [checkUser,checkAPP,checkAdmin], usersRouter);
 module.exports = app;
